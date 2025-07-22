@@ -1,0 +1,32 @@
+name: AutoWikiBot - PowerShell Edition
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  update-wiki:
+    if: github.event.pull_request.merged == true
+    runs-on: windows-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      OPENAI_APIKEY: ${{ secrets.OPENAI_APIKEY }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      REPO_NAME: ${{ github.event.repository.name }}
+      REPO_OWNER: ${{ github.repository_owner }}
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Run AutoWikiBot PowerShell Script
+      shell: pwsh
+      run: |
+        .\scripts\update-wiki-from-pr.ps1 `
+          -RepoOwner $env:REPO_OWNER `
+          -RepoName $env:REPO_NAME `
+          -PrNumber $env:PR_NUMBER `
+          -OpenAiApiKey $env:OPENAI_APIKEY `
+          -GitHubToken $env:GITHUB_PAT
