@@ -21,12 +21,12 @@ function Get-PullRequestInfo {
     $prUrl = "https://api.github.com/repos/$Owner/$Repo/pulls/$PR"
     $filesUrl = "https://api.github.com/repos/$Owner/$Repo/pulls/$PR/files"
 
-    $pr = Invoke-RestMethod -Uri $prUrl -Headers $headers
+    $pullrequest = Invoke-RestMethod -Uri $prUrl -Headers $headers
     $files = Invoke-RestMethod -Uri $filesUrl -Headers $headers
 
     return @{
-        Title = $pr.title
-        Body = $pr.body
+        Title = $pullrequest.title
+        Body = $pullrequest.body
         Files = $files | ForEach-Object { $_.filename }
     }
 }
