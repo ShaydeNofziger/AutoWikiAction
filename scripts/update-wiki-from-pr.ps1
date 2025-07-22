@@ -76,7 +76,11 @@ function Push-ToWiki {
         [string]$Token
     )
 
-    $wikiUrl = "https://$Token@github.com/$RepoOwner/$RepoName.wiki.git"
+    git config --global credential.helper store
+    git config --global core.askPass "echo"
+
+    $wikiUrl = "https://x-access-token:$Token@github.com/$RepoOwner/$RepoName.wiki.git"
+
     $tempDir = Join-Path $env:TEMP ("wiki-" + [guid]::NewGuid())
 
     git clone $wikiUrl $tempDir
