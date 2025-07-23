@@ -97,8 +97,15 @@ function Push-ToWiki {
     git config user.email "autowikibot@localhost"
     git config user.name "AutoWikiBot"
     git add $PageName
-    git commit -m "Auto-update: $PageName"
-    git push origin $branch
+
+    git diff --cached --quiet
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "No wiki changes detected for $PageName"
+    }
+    else {
+        git commit -m "Auto-update: $PageName"
+        git push origin $branch
+    }
     Pop-Location
 
     Remove-Item -Path $tempDir -Recurse -Force
